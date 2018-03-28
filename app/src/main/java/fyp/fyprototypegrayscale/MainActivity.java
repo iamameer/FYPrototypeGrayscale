@@ -14,12 +14,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
 import java.io.File;
+import java.io.FileOutputStream;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
             camera = Camera.open(cameraId);
         }
 
+        imgResult = (ImageView) findViewById(R.id.imgOriginal);
+        imgGrayscale = (ImageView) findViewById(R.id.imgGrayscale);
+
         button = (Button) findViewById(R.id.btnCapture);
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -66,12 +72,9 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(DEBUG_TAG,"pic taken");
 
                 loadpic();
-                //convertToGray(view);
             }
         });
 
-        imgResult = (ImageView) findViewById(R.id.imgOriginal);
-        imgGrayscale = (ImageView) findViewById(R.id.imgGrayscale);
     }
 
     private int findFacingCamera() {
@@ -97,35 +100,9 @@ public class MainActivity extends AppCompatActivity {
             Log.d(DEBUG_TAG,"ma: "+path);
             imgResult.setImageDrawable(Drawable.createFromPath(path));
 
-            bitmap = BitmapFactory.decodeFile((new File(path)).getAbsolutePath());
-
-            imgGrayscale.setImageBitmap(bitmap);
-            //convertToGray();
         } catch (Exception e) {
             Log.d(DEBUG_TAG, e.toString());
         }
-    }
-
-    public void convertToGray(){
-        //mRGBA = new Mat();
-        //mGrayscale = new Mat();
-
-        //BitmapFactory.Options o = new BitmapFactory.Options();
-        //o.inDither=false;
-        //o.inSampleSize=4;
-
-        int width = imgGrayscale.getWidth();
-        int height = imgGrayscale.getHeight();
-
-        bmpGray = Bitmap.createBitmap(width,height,Bitmap.Config.RGB_565);
-
-        //bmp to mat
-        Utils.bitmapToMat(bitmap,mRGBA);
-
-        Imgproc.cvtColor(mRGBA,mGrayscale,Imgproc.COLOR_RGB2GRAY);
-        Utils.matToBitmap(mGrayscale,bmpGray);
-
-        imgGrayscale.setImageBitmap(bmpGray);
     }
 
     @Override

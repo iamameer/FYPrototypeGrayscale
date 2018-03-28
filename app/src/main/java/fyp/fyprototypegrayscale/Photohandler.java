@@ -10,6 +10,11 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
@@ -57,6 +62,24 @@ public class Photohandler implements PictureCallback{
                     + error.getMessage());
             Toast.makeText(context, "Image could not be saved.",
                     Toast.LENGTH_LONG).show();
+        }
+
+        try{
+            //convert to gray
+            Mat omat = new Mat(150,150, CvType.CV_8UC4);
+            Mat gmat = new Mat(150,150, CvType.CV_8UC4);
+            omat.put(0,0,bytes);
+
+            Imgproc.cvtColor(omat,gmat,Imgproc.COLOR_RGB2GRAY);
+
+            //save gray
+            String path = Environment.getExternalStorageDirectory()+"/Pictures/CameraAPIDemo/";//Picture.jpg";
+            File file = new File(path, "Picture.jpg");
+            Log.d(DEBUG_TAG,"saving: "+file.getAbsolutePath());
+
+            Imgcodecs.imwrite(file.getAbsolutePath(),gmat);
+        }catch (Exception e){
+            Log.d(DEBUG_TAG,e.toString());
         }
     }
 
