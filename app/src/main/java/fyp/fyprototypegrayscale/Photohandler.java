@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import org.opencv.android.Utils;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -65,10 +66,13 @@ public class Photohandler implements PictureCallback{
         }
 
         try{
+            //read first
+            Bitmap bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
             //convert to gray
-            Mat omat = new Mat(150,150, CvType.CV_8UC4);
-            Mat gmat = new Mat(150,150, CvType.CV_8UC4);
-            omat.put(0,0,bytes);
+            Mat omat = new Mat(bmp.getWidth(),bmp.getHeight(), CvType.CV_8UC1);
+            Mat gmat = new Mat(bmp.getWidth(),bmp.getHeight(), CvType.CV_8UC1);
+            Utils.bitmapToMat(bmp,omat);
+            //omat.put(0,0,bytes);
 
             Imgproc.cvtColor(omat,gmat,Imgproc.COLOR_RGB2GRAY);
 
@@ -79,7 +83,7 @@ public class Photohandler implements PictureCallback{
 
             Imgcodecs.imwrite(file.getAbsolutePath(),gmat);
         }catch (Exception e){
-            Log.d(DEBUG_TAG,e.toString());
+            Log.d(DEBUG_TAG,"err: "+e.toString());
         }
     }
 

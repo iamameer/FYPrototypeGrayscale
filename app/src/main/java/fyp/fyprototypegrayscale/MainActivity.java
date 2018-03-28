@@ -100,6 +100,10 @@ public class MainActivity extends AppCompatActivity {
             Log.d(DEBUG_TAG,"ma: "+path);
             imgResult.setImageDrawable(Drawable.createFromPath(path));
 
+            //open gray
+            String path2 = Environment.getExternalStorageDirectory()+"/Pictures/CameraAPIDemo/Picture.jpg";
+            Log.d(DEBUG_TAG,"gy: "+path2);
+            imgGrayscale.setImageDrawable(Drawable.createFromPath(path2));
         } catch (Exception e) {
             Log.d(DEBUG_TAG, e.toString());
         }
